@@ -76,7 +76,7 @@
 )
 
 ;;; ── Main command ─────────────────────────────────────────────
-(defun C:BATCHPURGE ( / dcl_path dcl_id file_list pick_dir raw_files dir_clean
+(defun C:MP ( / dcl_path dcl_id file_list pick_dir raw_files dir_clean
                         sel_idx do_nested do_audit do_bak result
                         idx_list tok idx dwg
                         acad docs doc_obj saved_size new_size bak_file
@@ -251,5 +251,5 @@
   (princ)
 )
 
-(princ "\nBATCHPURGE loaded. Type BATCHPURGE to run.")
+(princ "\nThank you for choosing NASSLISP. MASSPURGE loaded. Type MP to run.")
 (princ)
