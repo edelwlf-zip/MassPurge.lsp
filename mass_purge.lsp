@@ -1,7 +1,7 @@
 ;;; ─────────────────────────────────────────────
-;;;  BATCHPURGE - Batch Purge for Plant 3D 2025
+;;;           NASSLISP MassPurge V1
 ;;; ─────────────────────────────────────────────
-
+;;; NOTE: THE .dcl and .lsp files must be in the same location for AutoCAD to be able to locate them
 (vl-load-com)
 
 ;;; ── Helper: split string by delimiter ────────
@@ -20,10 +20,30 @@
   result
 )
 
-;;; ── Windows BrowseForFolder dialog via ActiveX ──
-(defun browse_for_folder ( / shell folder picked path)
-  (setq shell  (vlax-create-object "Shell.Application"))
-  (setq folder (vlax-invoke shell 'BrowseForFolder 0 "Select folder with DWG files" 0 0))
+;;; ── Windows BrowseForFolder - Network/UNC aware ──
+(defun browse_for_folder ( / shell folder picked path hwnd)
+
+  ;; Get AutoCAD's window handle to use as parent for the dialog
+  (setq hwnd
+    (vla-get-hwnd (vlax-get-acad-object)))
+
+  (setq shell (vlax-create-object "Shell.Application"))
+
+  ;; Flags:
+  ;;   0x0001 = BIF_RETURNONLYFSDIRS  (folders only)
+  ;;   0x0040 = BIF_NEWDIALOGSTYLE    (modern resizable dialog)
+  ;;   0x0080 = BIF_USENEWUI          (includes edit box to type path)
+  ;;   0x0010 = BIF_DONTGOBELOWDOMAIN (show network)
+  ;;   0x0040 + 0x0080 = 0x00C0 combined = modern UI with type-in box
+  (setq folder
+    (vlax-invoke shell 'BrowseForFolder
+      hwnd                              ; parent window
+      "Select folder containing DWG files:"
+      (+ 64 128)                        ; 0x40+0x80 = modern UI + editable path box
+      0                                 ; start from Desktop (shows network, drives, Z:)
+    )
+  )
+
   (setq path nil)
   (if folder
     (progn
@@ -66,7 +86,7 @@
 )
 
 ;;; ── Main command ─────────────────────────────
-(defun C:BATCHPURGE ( / dcl_path dcl_id file_list pick_dir
+(defun C:MP ( / dcl_path dcl_id file_list pick_dir
                         sel_idx do_bak do_audit result
                         idx_list idx dwg)
 
