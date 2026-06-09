@@ -1,7 +1,7 @@
 ;;; ─────────────────────────────────────────────────────────────
-;;;                   NASSLISP MASS PURGE V4
+;;;                 NASSLISP MASSPURGE V5
 ;;; ─────────────────────────────────────────────────────────────
-;;; NOTE the dcl and lsp files must be in the same file for the program to recognize them
+;;; note the dcl and lsp files need to be in the same folder
 
 (vl-load-com)
 
@@ -76,7 +76,7 @@
 )
 
 ;;; ── Main command ─────────────────────────────────────────────
-(defun C:MP ( / dcl_path dcl_id file_list pick_dir raw_files dir_clean
+(defun C:BATCHPURGE ( / dcl_path dcl_id file_list pick_dir raw_files dir_clean
                         sel_idx do_nested do_audit do_bak result
                         idx_list tok idx dwg
                         acad docs doc_obj saved_size new_size bak_file
@@ -251,5 +251,5 @@
   (princ)
 )
 
-(princ "\nMASSPURGE loaded. Type MP to run.")
+(princ "\nBATCHPURGE loaded. Type BATCHPURGE to run.")
 (princ)
