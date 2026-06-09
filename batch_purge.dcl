@@ -1,5 +1,5 @@
 batch_purge : dialog {
-  label = "Batch Purge Drawings";
+  label = "--NASSLISP MASSPURGE V5--";
   : list_box {
     key = "dwg_list";
     label = "Select drawings to purge:";
